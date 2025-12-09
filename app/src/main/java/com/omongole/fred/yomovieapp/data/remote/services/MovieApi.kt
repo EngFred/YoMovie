@@ -6,6 +6,7 @@ import com.omongole.fred.yomovieapp.data.model.movies.MovieDetailDTO
 import com.omongole.fred.yomovieapp.data.model.movies.MovieResponse
 import com.omongole.fred.yomovieapp.data.model.shows.ShowDetailDTO
 import com.omongole.fred.yomovieapp.data.model.shows.ShowResponse
+import com.omongole.fred.yomovieapp.data.model.tmdb.VideoResponse
 import com.omongole.fred.yomovieapp.util.Constants.API_KEY
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -104,5 +105,11 @@ interface MovieApi {
         @Query("perPage") perPage: Int,
         @Query("with_genres") genreId: Long
     ) : MovieResponse
+
+    @GET("movie/{movie_id}/videos")
+    suspend fun getMovieVideos(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = API_KEY
+    ): VideoResponse
 
 }

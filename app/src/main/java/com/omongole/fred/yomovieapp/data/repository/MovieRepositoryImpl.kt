@@ -8,6 +8,8 @@ import androidx.paging.map
 import com.omongole.fred.yomovieapp.data.mapper.toGenre
 import com.omongole.fred.yomovieapp.data.mapper.toMovie
 import com.omongole.fred.yomovieapp.data.mapper.toMovieDetail
+import com.omongole.fred.yomovieapp.data.model.tmdb.toVideo
+import com.omongole.fred.yomovieapp.data.model.valueObjects.Video
 import com.omongole.fred.yomovieapp.data.remote.services.MovieApi
 import com.omongole.fred.yomovieapp.data.remote.source.movies.MoviesByGenrePagingSource
 import com.omongole.fred.yomovieapp.data.remote.source.movies.NowPlayingMoviesPagingSource
@@ -128,5 +130,17 @@ class MovieRepositoryImpl @Inject constructor(
                 it.toMovie()
             }
         }.flowOn(Dispatchers.IO)
+    }
+
+    override fun getMovieTrailers(movieId: Int): Flow<List<Video>> {
+        return flow {
+            val videos = movieApi.getMovieVideos(movieId).results
+                .map { it.toVideo() }
+                .filter { it.site == "YouTube" }
+            emit(videos)
+        }.flowOn(Dispatchers.IO).catch {
+            Log.e(TAG, "Error fetching trailers: $it")
+            emit(emptyList())
+        }
     }
 }

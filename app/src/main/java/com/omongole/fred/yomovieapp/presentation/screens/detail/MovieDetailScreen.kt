@@ -1,4 +1,5 @@
 package com.omongole.fred.yomovieapp.presentation.screens.detail
+
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.omongole.fred.yomovieapp.presentation.common.AnimatedDetailShimmerEffect
 import com.omongole.fred.yomovieapp.presentation.common.NoInternetComponent
 import com.omongole.fred.yomovieapp.presentation.theme.SeaGreen
 import com.omongole.fred.yomovieapp.presentation.viewModel.MovieDetailScreenViewModel
@@ -28,7 +28,7 @@ fun MovieDetailScreen(
     modifier: Modifier,
     assistedFactory: MovieDetailScreenViewModelAssistedFactory,
     showMoviePoster: (String) -> Unit,
-    watchVideoPreview: (String) -> Unit,
+    watchVideoPreview: () -> Unit, // REMOVED STRING PARAMETER
     onBackClick: () -> Unit
 ) {
 
@@ -61,7 +61,12 @@ fun MovieDetailScreen(
         }
         is Resource.Success -> {
             val movie = movieDetailState.result
-            MovieDetails(movie = movie, showMoviePoster, onPlayButtonClick = watchVideoPreview, onBackClick)
+            MovieDetails(
+                movie = movie,
+                showMoviePoster = showMoviePoster,
+                onPlayButtonClick = { _ -> watchVideoPreview() },
+                onBackClick = onBackClick
+            )
         }
     }
 }

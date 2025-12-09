@@ -151,24 +151,31 @@ fun AppNavigationGraph(
             )
         ) {
             val movieId = it.arguments?.getInt("id")!!
-            MovieDetailScreen(movieId = movieId, modifier = modifier, assistedFactory = movieDetailAssistedFactory, showMoviePoster = { posterPath ->
-                sharedViewModel.putPosterPath(posterPath)
-                navHostController.navigate(Route.PosterImage.destination)
-            }, watchVideoPreview = { movieName ->
-                navHostController.navigate( "${Route.MoviesPlayer.destination}/$movieName" )
-            }, onBackClick = {
-                navHostController.navigateUp()
-            } )
+            MovieDetailScreen(
+                movieId = movieId,
+                modifier = modifier,
+                assistedFactory = movieDetailAssistedFactory,
+                showMoviePoster = { posterPath ->
+                    sharedViewModel.putPosterPath(posterPath)
+                    navHostController.navigate(Route.PosterImage.destination)
+                },
+                watchVideoPreview = {
+                    navHostController.navigate( "${Route.MoviesPlayer.destination}/$movieId" )
+                },
+                onBackClick = {
+                    navHostController.navigateUp()
+                }
+            )
         }
 
         composable(
-            route = "${Route.MoviesPlayer.destination}/{name}",
+            route = "${Route.MoviesPlayer.destination}/{movieId}",
             arguments = listOf(
-                navArgument(name = "name") { type = NavType.StringType }
+                navArgument(name = "movieId") { type = NavType.IntType }
             )
         ) {
-            val movieName = it.arguments?.getString("name")!!
-            PlayerScreen(name = movieName, assistedFactory = moviesPlayerAssistedFactory )
+            val movieId = it.arguments?.getInt("movieId")!!
+            PlayerScreen(movieId = movieId, assistedFactory = moviesPlayerAssistedFactory )
         }
 
         composable(
