@@ -87,7 +87,7 @@ fun SearchWidget(
                     onSearchClicked()
                 }
             ),
-            colors = TextFieldDefaults.textFieldColors(
+            colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             )

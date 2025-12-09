@@ -11,5 +11,3 @@ object Constants {
     const val ITEMS_PER_PAGE = 10
     val THEME_MODE_KEY = booleanPreferencesKey("THEME_MODE_KEY")
 }
-
-//AIzaSyCUKPho9OjM5HfajMpdnPdh-WBwmnyFoa4

@@ -9,5 +9,5 @@ import javax.inject.Singleton
 @Component( modules = [MovieApiModule::class, ItunesAppModule::class] )
 interface AppComponent {
     fun getMovieApi(): MovieApi
-    fun getItunes(): ItunesApi
+    fun getItunesApi(): ItunesApi
 }
