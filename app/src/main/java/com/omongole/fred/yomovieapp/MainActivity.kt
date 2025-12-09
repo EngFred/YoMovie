@@ -1,4 +1,4 @@
-package com.omongole.fred.yomovieapp.presentation
+package com.omongole.fred.yomovieapp
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,9 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -17,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.omongole.fred.yomovieapp.presentation.common.AppBottomBar
@@ -63,17 +60,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            // We no longer need to collect themeMode since it's forced dark
             YoMovieAppTheme {
-                // GLOBAL GRADIENT BACKGROUND
                 Box(
-                    modifier = Modifier
+                    modifier = Modifier.Companion
                         .fillMaxSize()
                         .background(
-                            brush = Brush.verticalGradient(
+                            brush = Brush.Companion.verticalGradient(
                                 colors = listOf(
-                                    Color(0xFF0F172A), // Deep Premium Navy
-                                    Color(0xFF000000)  // Pure Black
+                                    Color(0xFF0F172A),
+                                    Color(0xFF000000)
                                 )
                             )
                         )
@@ -91,12 +86,12 @@ class MainActivity : ComponentActivity() {
         val sharedViewModel: SharedViewModel = viewModel()
 
         Scaffold(
-            containerColor = Color.Transparent,
+            containerColor = Color.Companion.Transparent,
             bottomBar = { AppBottomBar(navController = navController) },
         ) { paddingValues ->
             AppNavigationGraph(
                 navHostController = navController,
-                modifier = Modifier.padding(paddingValues),
+                modifier = Modifier.Companion.padding(paddingValues),
                 moviesSearchAssistedFactory = searchAssistedFactory,
                 moviesGenresAssistedFactory = moviesGenreAssistedFactory,
                 showsSearchAssistedFactory = showsSearchAssistedFactory,
