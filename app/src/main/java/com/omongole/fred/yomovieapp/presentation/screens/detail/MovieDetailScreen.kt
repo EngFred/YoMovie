@@ -28,7 +28,8 @@ fun MovieDetailScreen(
     modifier: Modifier,
     assistedFactory: MovieDetailScreenViewModelAssistedFactory,
     showMoviePoster: (String) -> Unit,
-    watchVideoPreview: (String) -> Unit
+    watchVideoPreview: (String) -> Unit,
+    onBackClick: () -> Unit
 ) {
 
     val detailViewModel =  viewModel(
@@ -60,7 +61,7 @@ fun MovieDetailScreen(
         }
         is Resource.Success -> {
             val movie = movieDetailState.result
-            MovieDetails(movie = movie, showMoviePoster, onPlayButtonClick = watchVideoPreview)
+            MovieDetails(movie = movie, showMoviePoster, onPlayButtonClick = watchVideoPreview, onBackClick)
         }
     }
 }

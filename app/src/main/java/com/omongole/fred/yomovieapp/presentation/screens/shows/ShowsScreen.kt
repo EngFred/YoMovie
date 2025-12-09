@@ -1,11 +1,17 @@
 package com.omongole.fred.yomovieapp.presentation.screens.shows
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -21,75 +27,68 @@ fun ShowsScreen(
     searchShows: (String) -> Unit,
     showDetails: (Int) -> Unit
 ) {
-
     val showsViewModel: ShowsViewModel = hiltViewModel()
     val topRatedTvShows = showsViewModel.topRatedTvShows.collectAsLazyPagingItems()
     val popularTvShows = showsViewModel.popularTvShows.collectAsLazyPagingItems()
     val onAirTvShows = showsViewModel.onAirTvShows.collectAsLazyPagingItems()
 
-    if ( (topRatedTvShows.loadState.refresh is LoadState.Error) &&
-        (popularTvShows.loadState.refresh is LoadState.Error) &&
-        (onAirTvShows.loadState.refresh is LoadState.Error)
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
     ) {
-
-        NoInternetComponent(
-            modifier = modifier.fillMaxSize(),
-            error = "You're Offline!",
-            refresh = {
-                topRatedTvShows.refresh()
-                popularTvShows.refresh()
-                onAirTvShows.refresh()
+        SearchWidget(
+            query = showsViewModel.searchQuery,
+            placeHolder = "Search TV Shows...",
+            onCloseClicked = { showsViewModel.searchQuery = "" },
+            onSearchClicked = {
+                if (showsViewModel.searchQuery.isNotEmpty()) {
+                    searchShows(showsViewModel.searchQuery)
+                }
+            },
+            onValueChanged = {
+                showsViewModel.onEvent(ShowsScreenEvent.SearchQueryChange(it))
             }
         )
 
-    } else {
-
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .verticalScroll(state = rememberScrollState(), enabled = true)
+        if ((topRatedTvShows.loadState.refresh is LoadState.Error) &&
+            (popularTvShows.loadState.refresh is LoadState.Error)
         ) {
-            SearchWidget(
-                query = showsViewModel.searchQuery,
-                placeHolder = "Search shows",
-                onCloseClicked = {
-                    showsViewModel.searchQuery = ""
-                },
-                onSearchClicked = {
-                    if ( showsViewModel.searchQuery.isNotEmpty() ) {
-                        searchShows( showsViewModel.searchQuery )
-                    }
-                },
-                onValueChanged = {
-                    showsViewModel.onEvent( ShowsScreenEvent.SearchQueryChange(it) )
+            NoInternetComponent(
+                modifier = Modifier.fillMaxSize(),
+                error = "Offline mode. Check connection.",
+                refresh = {
+                    topRatedTvShows.refresh()
+                    popularTvShows.refresh()
+                    onAirTvShows.refresh()
                 }
             )
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                ShowsSection(
+                    shows = onAirTvShows,
+                    sectionTitle = "On Air Now",
+                    onShowClick = showDetails
+                )
 
-            ShowsSection(
-                shows = onAirTvShows,
-                sectionTitle = "On Air",
-                onShowClick = {
-                    showDetails.invoke(it)
-                }
-            )
+                ShowsSection(
+                    shows = popularTvShows,
+                    sectionTitle = "Trending Shows",
+                    onShowClick = showDetails
+                )
 
-            ShowsSection(
-                shows = topRatedTvShows,
-                sectionTitle = "Top Rated",
-                onShowClick = {
-                    showDetails.invoke(it)
-                }
-            )
+                ShowsSection(
+                    shows = topRatedTvShows,
+                    sectionTitle = "Critically Acclaimed",
+                    onShowClick = showDetails
+                )
 
-            ShowsSection(
-                shows = popularTvShows,
-                sectionTitle = "Popular",
-                onShowClick = {
-                    showDetails.invoke(it)
-                }
-            )
+                Spacer(modifier = Modifier.height(80.dp))
+            }
         }
-
     }
-
 }

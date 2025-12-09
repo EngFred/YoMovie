@@ -3,60 +3,27 @@ package com.omongole.fred.yomovieapp.presentation.screens.detail
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.omongole.fred.yomovieapp.domain.model.shows.ShowDetail
-import com.omongole.fred.yomovieapp.domain.model.valueObjects.Company
-import com.omongole.fred.yomovieapp.domain.model.valueObjects.Country
-import com.omongole.fred.yomovieapp.domain.model.valueObjects.Genre
-import com.omongole.fred.yomovieapp.domain.model.valueObjects.Language
-import com.omongole.fred.yomovieapp.domain.model.valueObjects.Network
-import com.omongole.fred.yomovieapp.domain.model.valueObjects.ShowCreator
-import com.omongole.fred.yomovieapp.presentation.theme.CoralOrange
-import com.omongole.fred.yomovieapp.presentation.theme.CoralRed
-import com.omongole.fred.yomovieapp.presentation.theme.DodgerBlue
-import com.omongole.fred.yomovieapp.presentation.theme.FireEngineRed
-import com.omongole.fred.yomovieapp.presentation.theme.MidnightBlack
-import com.omongole.fred.yomovieapp.presentation.theme.PumpkinOrange
-import com.omongole.fred.yomovieapp.presentation.theme.SeaGreen
-import com.omongole.fred.yomovieapp.presentation.theme.SteelBlue
-import com.omongole.fred.yomovieapp.presentation.theme.WhiteSmoke
-import com.omongole.fred.yomovieapp.presentation.theme.YoMovieAppTheme
-import com.omongole.fred.yomovieapp.util.Constants
 import com.omongole.fred.yomovieapp.util.displayOriginalImage
 import com.omongole.fred.yomovieapp.util.displayPosterImage
 import com.omongole.fred.yomovieapp.util.formatDate
@@ -66,307 +33,178 @@ import com.omongole.fred.yomovieapp.util.formatDate
 @Composable
 fun ShowDetails(
     show: ShowDetail,
-    showPoster: (String) -> Unit
+    showPoster: (String) -> Unit,
+    onBackClick: () -> Unit
 ) {
+    val scrollState = rememberScrollState()
 
-    Column( 
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
-    ) {
-        
+    Box(modifier = Modifier.fillMaxSize()
+        .background(color = MaterialTheme.colorScheme.background)
+        .navigationBarsPadding()) {
+        // Backdrop
+        AsyncImage(
+            model = displayOriginalImage(show.backdropPath ?: show.posterPath),
+            contentDescription = "Backdrop",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(400.dp),
+            contentScale = ContentScale.Crop
+        )
+
+        // Gradient
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
-        ) {
-            AsyncImage(
-                model = displayOriginalImage( show.backdropPath ),
-                contentDescription = "backdrop_image",
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .fillMaxWidth()
-                    .height(240.dp)
-                    .background(MidnightBlack),
-                contentScale = ContentScale.Crop
-            )
-            Row (
-                modifier = Modifier
-                    .padding(top = 173.dp, start = 8.dp, end = 8.dp)
-                    .fillMaxWidth()
-                    .height(320.dp),
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.Start
-            ){
-                Card(
-                    onClick = {
-                        show.posterPath?.let { posterPath ->
-                            showPoster(posterPath)
-                        }
-                    },
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .weight(1f)
-                        .height(320.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                ) {
-                    AsyncImage(
-                        modifier = Modifier.background(Color.DarkGray),
-                        model = displayPosterImage(show.posterPath),
-                        contentDescription = "Poster Image",
-                        contentScale = ContentScale.Crop,
+                .height(400.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            MaterialTheme.colorScheme.background.copy(alpha = 0.5f),
+                            MaterialTheme.colorScheme.background
+                        )
                     )
-                }
+                )
+        )
 
-                Column(
-                    modifier = Modifier
-                        .padding(top = 70.dp)
-                        .weight(1f)
-                        .height(380.dp)
+        // Back Button Overlay
+//        IconButton(
+//            onClick = onBackClick,
+//            modifier = Modifier
+//                .align(Alignment.TopStart)
+//                .padding(start = 16.dp, top = 16.dp)
+//                .background(
+//                    color = MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
+//                    shape = CircleShape
+//                )
+//        ) {
+//            Icon(
+//                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+//                contentDescription = "Back",
+//                tint = MaterialTheme.colorScheme.onBackground
+//            )
+//        }
+
+        // Content Column
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(horizontal = 16.dp)
+        ) {
+            Spacer(modifier = Modifier.height(280.dp))
+
+            // Title
+            Text(
+                text = show.name,
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    fontWeight = FontWeight.ExtraBold,
+                    shadow = androidx.compose.ui.graphics.Shadow(color = Color.Black, blurRadius = 8f)
+                ),
+                color = MaterialTheme.colorScheme.onBackground,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            // Status Badge & Rating
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Status Badge
+                Surface(
+                    shape = RoundedCornerShape(4.dp),
+                    color = if(show.status == "Ended") MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary
                 ) {
                     Text(
-                        text = show.name,
-                        fontWeight = FontWeight.ExtraBold,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        maxLines = 3
+                        text = show.status ?: "Unknown",
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.Black
                     )
-                    if ( show.rating != 0.toDouble() ) {
-                        Spacer(modifier = Modifier.size(11.dp))
-                        val rating = String.format("%.1f", show.rating)
-                        Text( text = "$rating rating" )
-                    } else {
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text( text = "-", modifier = Modifier.padding(start = 7.dp))
-                    }
-                    if ( !show.status.isNullOrEmpty()) {
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "${show.status}",
-                            fontFamily = FontFamily.Cursive,
-                            color = if ( show.status == "Ended" ) FireEngineRed else PumpkinOrange
-                        )
-                    } else {
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text( text = "-", modifier = Modifier.padding(start = 7.dp))
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    Column {
-                        Row {
-                            Text(
-                                text = "From:",
-                                modifier = Modifier.padding(end = 4.dp),
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp
-                            )
-                            if ( !show.firstAirDate.isNullOrEmpty() ) {
-                                Text(
-                                    text = formatDate(show.firstAirDate),
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    color = Color.Gray
-                                )
-                            }else {
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text( text = "-", modifier = Modifier.padding(start = 7.dp))
-                            }
-                        }
-                        Row {
-                            Text(
-                                text = "To:",
-                                modifier = Modifier.padding(end = 4.dp),
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp
-                            )
-                            if ( !show.lastAirDate.isNullOrEmpty() ) {
-                                Text(
-                                    text = formatDate(show.lastAirDate),
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    color = if ( show.status == "Ended" ) FireEngineRed else PumpkinOrange
-                                )
-                            }else {
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text( text = "-", modifier = Modifier.padding(start = 7.dp))
-                            }
-                        }
-                    }
                 }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                // Rating
+                Icon(Icons.Rounded.Star, null, tint = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(16.dp))
+                Text(
+                    text = String.format(" %.1f", show.rating),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.secondary
+                )
             }
-        }
 
-        if ( show.tagline != "" ) {
-            Text(
-                text = show.tagline ?: "",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(14.dp),
-                fontStyle = FontStyle.Italic,
-                fontWeight = FontWeight.Medium,
-                fontSize = 17.sp
-            )
-        }
+            // Stats Row (Seasons | Episodes | Year)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ShowStatItem("Seasons", show.numberOfSeasons.toString())
+                ShowStatItem("Episodes", show.numberOfEpisodes.toString())
+                ShowStatItem("Year", show.firstAirDate?.take(4) ?: "-")
+            }
 
-        if ( !show.overview.isNullOrEmpty() ) {
+            Spacer(modifier = Modifier.height(24.dp))
+
             Text(
                 text = "Overview",
-                Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium,
-                color = SeaGreen
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = show.overview,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-                textAlign = TextAlign.Left
+                text = show.overview ?: "No details available.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+                modifier = Modifier.padding(top = 8.dp),
+                lineHeight = 22.sp
             )
-        }
 
-        Divider()
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-        ) {
-            val seasonNoCheck = if ( show.numberOfSeasons > 1 ) "seasons" else "season"
-            val episodeNoCheck = if ( show.numberOfEpisodes > 1 ) "episodes" else "episode"
-            Text(text = "${ show.numberOfSeasons } $seasonNoCheck", modifier = Modifier.padding( end = 10.dp ), fontWeight = FontWeight.Bold)
-            Spacer(
-                modifier = Modifier
-                    .height(24.dp)
-                    .width(2.dp)
-                    .background(color = Color.Gray)
-                    .padding(10.dp)
-            )
-            Text(text = "${show.numberOfEpisodes} $episodeNoCheck", modifier = Modifier.padding( start = 10.dp, end = 10.dp), fontWeight = FontWeight.Bold)
-        }
-        Divider()
+            Spacer(modifier = Modifier.height(24.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 10.dp, end = 10.dp, bottom = 10.dp, top = 10.dp),
-            verticalAlignment = Alignment.Top
-        ) {
-            Text(text = "Genres: ", fontWeight = FontWeight.Bold, color = SeaGreen)
-            Text(text = show.genres.joinToString { it.name })
-        }
-
-        Column(
-            modifier = Modifier.padding(horizontal = 10.dp)
-        ) {
-            if ( show.productionCompanies.isNotEmpty() ) {
+            // Networks (Horizontal Scroll)
+            if (show.networks.isNotEmpty()) {
                 Text(
-                    text = "Production Companies:",
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                    color = SeaGreen
+                    text = "Networks",
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onBackground
                 )
-                Text(text = show.productionCompanies.joinToString { it.name })
-                Spacer(modifier = Modifier.size(12.dp))
-            }
-            if ( show.productionCountries.isNotEmpty() ) {
-                Text(
-                    text = "Production Countries:",
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                    color = SeaGreen
-                )
-                Text(text = show.productionCountries.joinToString { it.name })
-            }
-        }
-
-        if ( show.networks.isNotEmpty() ) {
-            Text(
-                text = "Networks:",
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(start = 10.dp, top = 10.dp),
-                color = SeaGreen
-            )
-            Spacer(modifier = Modifier.size(10.dp))
-            Row(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .horizontalScroll(rememberScrollState())
-                    .padding(start = 10.dp)
-            ) {
-                show.networks.forEach {
-                    Box(
-                        modifier = Modifier
-                            .height(75.dp)
-                            .width(100.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .clickable {
-                                it.logoPath?.let { posterPath ->
-                                    showPoster(posterPath)
-                                }
-                            }.background(WhiteSmoke)
-                            .padding(horizontal = 10.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        AsyncImage(
-                            model = displayPosterImage(it.logoPath),
-                            contentDescription = "Poster Image",
-                            contentScale = ContentScale.Fit,
-                        )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    show.networks.forEach { network ->
+                        Card(
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            AsyncImage(
+                                model = displayPosterImage(network.logoPath),
+                                contentDescription = network.name,
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier.padding(8.dp).height(40.dp).width(80.dp)
+                            )
+                        }
                     }
-                    Spacer(modifier = Modifier.size(10.dp))
                 }
             }
+
+            Spacer(modifier = Modifier.height(50.dp))
         }
-        Spacer(modifier = Modifier.size(10.dp))
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview( showBackground = true )
 @Composable
-fun ShowDetailsPreview() {
-
-    YoMovieAppTheme {
-
-        ShowDetails(
-            showPoster = {},
-            show = ShowDetail(
-                id = 1,
-                createdBy = listOf(
-                    ShowCreator(id=1, name= "Douglas", null)
-                ),
-                firstAirDate = "Jan, 03, 2001",
-                lastAirDate = "Jan, 06, 2005",
-                genres = listOf(
-                    Genre(id = 1, name = "Science"),
-                    Genre(id = 2, name = "Action"),
-                    Genre(id = 3, name = "Mystery"),
-                ),
-                spokenLanguages = listOf(
-                    Language("Japanese")
-                ),
-                name = "Teng Teng",
-                networks = listOf(
-                    Network(id=1, null, "ABS-CBN")
-                ),
-                numberOfEpisodes = 100,
-                numberOfSeasons = 23,
-                productionCountries = listOf(
-                    Country("Japan"),
-                    Country("Singapore")
-                ),
-                productionCompanies = listOf(
-                    Company( id = 1, logoPath = null, name = "Netflix" )
-                ),
-                posterPath = null,
-                backdropPath = null,
-                overview = "After a deadly earthquake turns Seoul into a lawless badland, a fearless huntsman springs into action to rescue a teenager abducted by a mad doctor.",
-                status = "Returning series",
-                tagline = "Hehe tujja tujja!",
-                rating = 4.2
-            )
+fun ShowStatItem(label: String, value: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = value,
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

@@ -3,17 +3,19 @@ package com.omongole.fred.yomovieapp.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,10 +25,9 @@ import com.omongole.fred.yomovieapp.presentation.navigation.AppNavigationGraph
 import com.omongole.fred.yomovieapp.presentation.theme.YoMovieAppTheme
 import com.omongole.fred.yomovieapp.presentation.viewModel.GenresMovieResultViewModelAssistedFactory
 import com.omongole.fred.yomovieapp.presentation.viewModel.GenresShowsResultViewModelAssistedFactory
-import com.omongole.fred.yomovieapp.presentation.viewModel.HomeScreenViewModel
 import com.omongole.fred.yomovieapp.presentation.viewModel.MovieDetailScreenViewModelAssistedFactory
-import com.omongole.fred.yomovieapp.presentation.viewModel.PlayerScreenViewModel
 import com.omongole.fred.yomovieapp.presentation.viewModel.MoviesSearchResultScreenViewModelAssistedFactory
+import com.omongole.fred.yomovieapp.presentation.viewModel.PlayerScreenViewModel
 import com.omongole.fred.yomovieapp.presentation.viewModel.SharedViewModel
 import com.omongole.fred.yomovieapp.presentation.viewModel.ShowDetailScreenViewModelAssistedFactory
 import com.omongole.fred.yomovieapp.presentation.viewModel.ShowsSearchResultScreenViewModelAssistedFactory
@@ -58,22 +59,26 @@ class MainActivity : ComponentActivity() {
     lateinit var moviesPlayerAssistedFactory: PlayerScreenViewModel.PlayerViewModelAssistedFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         installSplashScreen()
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
-            val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
-            val themeMode = homeScreenViewModel.themeMode.collectAsState().value
-            YoMovieAppTheme( darkTheme = themeMode ) {
-                Surface(
+            // We no longer need to collect themeMode since it's forced dark
+            YoMovieAppTheme {
+                // GLOBAL GRADIENT BACKGROUND
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .navigationBarsPadding()
-                        .statusBarsPadding(),
-                    color = MaterialTheme.colorScheme.background
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color(0xFF0F172A), // Deep Premium Navy
+                                    Color(0xFF000000)  // Pure Black
+                                )
+                            )
+                        )
                 ) {
-                    MainScreen(
-                        darkTheme = themeMode
-                    )
+                    MainScreen()
                 }
             }
         }
@@ -81,17 +86,17 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun MainScreen(
-        darkTheme: Boolean
-    ) {
+    fun MainScreen() {
         val navController = rememberNavController()
         val sharedViewModel: SharedViewModel = viewModel()
+
         Scaffold(
-            bottomBar = { AppBottomBar(navController = navController) }
-        ) {
+            containerColor = Color.Transparent,
+            bottomBar = { AppBottomBar(navController = navController) },
+        ) { paddingValues ->
             AppNavigationGraph(
                 navHostController = navController,
-                modifier = Modifier.padding( paddingValues = it),
+                modifier = Modifier.padding(paddingValues),
                 moviesSearchAssistedFactory = searchAssistedFactory,
                 moviesGenresAssistedFactory = moviesGenreAssistedFactory,
                 showsSearchAssistedFactory = showsSearchAssistedFactory,
@@ -99,7 +104,7 @@ class MainActivity : ComponentActivity() {
                 showDetailAssistedFactory = showDetailAssistedFactory,
                 moviesPlayerAssistedFactory = moviesPlayerAssistedFactory,
                 sharedViewModel = sharedViewModel,
-                darkTheme = darkTheme,
+                darkTheme = true,
                 showsGenresAssistedFactory = showsResultAssistedFactory
             )
         }

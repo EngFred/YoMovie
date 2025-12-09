@@ -54,6 +54,7 @@ fun ShowDetailScreen(
     modifier: Modifier,
     assistedFactory: ShowDetailScreenViewModelAssistedFactory,
     showPoster: (String) -> Unit,
+    onBackClick: () -> Unit
 ) {
 
     val viewModel =  viewModel(
@@ -85,7 +86,7 @@ fun ShowDetailScreen(
         }
         is Resource.Success -> {
             val show = showDetailState.result
-            ShowDetails(show = show, showPoster = showPoster)
+            ShowDetails(show = show, showPoster = showPoster, onBackClick)
         }
     }
 }
