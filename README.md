@@ -53,7 +53,7 @@
 
 **YoMovie** is a robust Android application designed to provide movie and TV enthusiasts with a seamless discovery experience. Built using modern Android development standards, it leverages **Jetpack Compose** for UI and follows **Clean Architecture** principles to ensure scalability and maintainability.
 
-The app fetches real-time data from **The Movie Database (TMDB)**, allowing users to explore trending content, watch trailers, and filter by genres with support for both Light and Dark themes.
+The app fetches real-time data from **The Movie Database (TMDB)**, allowing users to explore trending content, watch trailers, and filter by genres.
 
 ---
 
