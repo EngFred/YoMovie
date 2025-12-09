@@ -1,5 +1,5 @@
-<h1>Cinema</h1>
-<p>Cinema is a modern movie and TV show application for Android devices, built using Jetpack Compose, Kotlin, MVVM architecture, Retrofit for network calls, and Clean Architecture principles. It provides users with access to a vast collection of movies and TV shows sourced from The Movie Database (TMDB) API, including Now Playing, Popular, Top Rated movies, On Air, Top Rated, and Popular TV shows..</p>
+<h1>YoMovie</h1>
+<p>YoMovie is a modern movie and TV show application for Android devices, built using Jetpack Compose, Kotlin, MVVM architecture, Retrofit for network calls, and Clean Architecture principles. It provides users with access to a vast collection of movies and TV shows sourced from The Movie Database (TMDB) API, including Now Playing, Popular, Top Rated movies, On Air, Top Rated, and Popular TV shows..</p>
 <h2>Features</h2>
 <ul>
   <li><strong>TMDB Integration:</strong> Fetches movie and TV show data from The Movie Database (TMDB) API.</li>
