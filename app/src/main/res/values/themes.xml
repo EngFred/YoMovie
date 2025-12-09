@@ -4,7 +4,7 @@
     <style name="Theme.YoMovieApp" parent="android:Theme.Material.Light.NoActionBar" />
 
     <style name="Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ge</item>
         <item name="windowSplashScreenBackground">@color/app_background</item>
         <item name="postSplashScreenTheme">@style/Theme.YoMovieApp</item>
     </style>

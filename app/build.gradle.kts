@@ -16,15 +16,16 @@ android {
         applicationId = "com.omongole.fred.yomovieapp"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -108,7 +109,7 @@ dependencies {
     implementation(libs.androidx.paging.compose)
 
     //
-    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:13.0.0")
+    implementation(libs.android.youtube.player)
 
     // Testing Dependencies
     testImplementation(libs.junit)
