@@ -12,8 +12,8 @@
   </p>
 
   <p>
-    <img src="https://img.shields.io/badge/Kotlin-1.9.0-7f52ff?style=flat&logo=kotlin&logoColor=white" alt="Kotlin" />
-    <img src="https://img.shields.io/badge/Jetpack%20Compose-1.5.3-4285F4?style=flat&logo=jetpackcompose&logoColor=white" alt="Jetpack Compose" />
+    <img src="https://img.shields.io/badge/Kotlin-2.1.10-7f52ff?style=flat&logo=kotlin&logoColor=white" alt="Kotlin" />
+    <img src="https://img.shields.io/badge/Jetpack%20Compose-2025.12.00-4285F4?style=flat&logo=jetpackcompose&logoColor=white" alt="Jetpack Compose" />
     <img src="https://img.shields.io/badge/Architecture-Clean%20%2B%20MVVM-success?style=flat" alt="Clean Architecture" />
     <img src="https://img.shields.io/badge/API-TMDB-01b4e4?style=flat&logo=themoviedatabase&logoColor=white" alt="TMDB API" />
     <img src="https://img.shields.io/badge/License-MIT-blue?style=flat" alt="License" />
@@ -53,7 +53,7 @@
 
 **YoMovie** is a robust Android application designed to provide movie and TV enthusiasts with a seamless discovery experience. Built using modern Android development standards, it leverages **Jetpack Compose** for UI and follows **Clean Architecture** principles to ensure scalability and maintainability.
 
-The app fetches real-time data from **The Movie Database (TMDB)**, allowing users to explore trending content, watch trailers, and filter by genres with support for both Light and Dark themes.
+The app fetches real-time data from **The Movie Database (TMDB)**, allowing users to explore trending content, watch trailers, and filter by genres.
 
 ---
 
@@ -85,7 +85,7 @@ This project is built using the **MVVM (Model-View-ViewModel)** pattern combined
 
 ---
 
-## 📥 Installation
+## Installation
 
 ### Option 1: Direct Download (APK)
 You can download the latest signed APK directly to your device:
@@ -117,5 +117,13 @@ Contributions are always welcome! Whether it's reporting a bug, suggesting an en
 3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4.  Push to the Branch (`git push origin feature/AmazingFeature`)
 5.  Open a Pull Request
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+<div align="center">
+  <small>Made with ❤️ by EngFred</small>
+</div>
 
 ---
